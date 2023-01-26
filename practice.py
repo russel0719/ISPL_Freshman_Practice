@@ -31,8 +31,13 @@ def main():
 def read_image_and_label(paths):
     # TODO: with image folders path, read images and make label with image paths)
     # DO NOT use dataset zoo from pytorch or tensorflow
-    images = None
-    labels = None
+    images = []
+    labels = []
+    for path in paths:
+        label = path.split(os.path.sep)[1]
+        image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+        images.append(image)
+        labels.append(label)
     return images, labels
 
 
@@ -47,22 +52,34 @@ def save_npy(train_dataset, test_dataset):
 
 def read_npy():
     # TODO: read npy files and return dictionary
+    train_images = np.load("./train_images.npy")
+    train_labels = np.load("./train_labels.npy")
+    test_images = np.load("./test_images.npy")
+    test_labels = np.load("./test_labels.npy")
     """
      data = {'train image': [train_images],
              'train label': [train_labels],
              'test_image': [test_images],
              'test_label': [test_labels]
             }
-     """
+    """
     data_dict = OrderedDict()
+    data_dict['train_image'] = train_images
+    data_dict['train_label'] = train_labels
+    data_dict['test_image'] = test_images
+    data_dict['test_label'] = test_labels
     return data_dict
 
 def save_pickle(data_dict):
     # TODO: save data_dict as pickle (erase "return 0" when you finish write your code)
-    return 0
+    with open('data.pickle', 'wb') as f:
+        pickle.dump(data_dict, f)
 
 def data_augment(image):
     # TODO: use cv2.flip, cv2.rotate, cv2.resize and save each augmented image
+    #image = cv2.flip(image, 1)
+    #image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+    #image = cv2.resize(image, (56, 56), interpolation=cv2.INTER_NEAREST)
     cv2.imwrite("./original.jpg",image)
 
 if __name__ == "__main__":
